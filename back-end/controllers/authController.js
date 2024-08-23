@@ -54,7 +54,7 @@ const login = async (req, res) => {
         signed: true,
         secure: false,
         maxAge: 60 * 60 * 24 * 1000,
-      },
+      }
     );
     return res.status(200).json({
       ok: true,

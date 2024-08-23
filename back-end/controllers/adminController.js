@@ -46,7 +46,7 @@ const update_user_profile = async (req, res) => {
       },
       {
         where: { id: user_id },
-      },
+      }
     );
 
     if (update) {
@@ -105,8 +105,49 @@ const load_user_profile_by_id = async (req, res) => {
   }
 };
 
+const delete_user_by_username = async (req, res) => {
+  try {
+    // let user_id = await get_user_id(req); // Get user id from JWT token by the helper function
+
+    // if (!user_id) {
+    //   return res.status(400).json({ message: "Invalid Request", ok: false });
+    // }
+
+    let { username } = req.body;
+
+    let user = await UserModel.findOne({ where: { username: username } });
+
+    if (!user) {
+      return res.status(400).send({
+        ok: false,
+        status: 400,
+        message: "User not found",
+      });
+    }
+
+    let deleted = await UserModel.destroy({ where: { username: username } });
+
+    if (deleted) {
+      console.log("user is deleted!");
+      return res.status(200).send({
+        ok: true,
+        status: 200,
+        message: "User deleted",
+      });
+    }
+  } catch (error) {
+    console.log(error);
+    return res.status(500).send({
+      status: 500,
+      ok: false,
+      message: "Internal Server Error",
+    });
+  }
+};
+
 module.exports = {
   load_platform_users,
   update_user_profile,
   load_user_profile_by_id,
+  delete_user_by_username,
 };

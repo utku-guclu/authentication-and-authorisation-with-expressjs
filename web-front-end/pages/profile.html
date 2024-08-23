@@ -1,4 +1,4 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -22,9 +22,17 @@
       <button type="submit">Update Profile</button>
     </form>
 
+    <h1>Delete User</h1>
+    <form id="delete-user-form">
+      <label for="other-username">Other Username:</label>
+      <input type="text" id="other-username" name="other-username" required />
+      <br />
+      <button type="submit">Delete User</button>
+    </form>
+
     <script>
       async function loadUserProfile() {
-        const response = await fetch("http://127.0.0.1:4001/auth/user", {
+        const response = await fetch("http://localhost:4001/auth/user", {
           credentials: "include",
         });
         const user = (await response.json())?.payload;
@@ -39,6 +47,34 @@
       }
 
       document
+        .getElementById("delete-user-form")
+        .addEventListener("submit", async (event) => {
+          event.preventDefault();
+          const username = document.getElementById("other-username").value;
+          const response = await fetch(
+            "http://localhost:4001/admin/delete/user",
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                // "x-access-token": getToken(), // Include the token here
+              },
+              body: JSON.stringify({
+                username,
+              }),
+              credentials: "include", // Include credentials for cookies or token
+            }
+          );
+
+          const result = await response.json();
+          if (response.ok) {
+            alert("User deleted successfully");
+          } else {
+            alert(result.message || "Failed to delete user");
+          }
+        });
+
+      document
         .getElementById("profile-form")
         .addEventListener("submit", async function (event) {
           event.preventDefault();
@@ -46,7 +82,7 @@
           const contact_number =
             document.getElementById("contact_number").value;
           const email = document.getElementById("email").value;
-          const response = await fetch("http://127.0.0.1:4001/auth/user", {
+          const response = await fetch("http://localhost:4001/auth/user", {
             method: "PUT",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ username, email, contact_number }),

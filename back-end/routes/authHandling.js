@@ -12,10 +12,10 @@ router.post("/logout", (req, res) => authController.logout(req, res));
 router.post("/register", (req, res) => authController.register(req, res));
 
 router.get("/user", authentication, authorisation("user"), (req, res) =>
-  authController.load_user_profile(req, res),
+  authController.load_user_profile(req, res)
 );
 router.put("/user", authentication, authorisation("user"), (req, res) =>
-  authController.update_user_profile(req, res),
+  authController.update_user_profile(req, res)
 );
 
 module.exports = router;
